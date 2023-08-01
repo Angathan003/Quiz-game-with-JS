@@ -1,10 +1,11 @@
+// script.js
 const startButton = document.getElementById('start-btn')
 const nextButton = document.getElementById('next-btn')
 const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById('answer-buttons')
 
-let shuffledQuestions, currentQuestionIndex
+let shuffledQuestions, currentQuestionIndex, score;
 
 startButton.addEventListener('click', startGame)
 nextButton.addEventListener('click', () => {
@@ -18,6 +19,7 @@ function startGame() {
   currentQuestionIndex = 0
   questionContainerElement.classList.remove('hide')
   setNextQuestion()
+  score = 0;
 }
 
 function setNextQuestion() {
@@ -50,6 +52,11 @@ function resetState() {
 function selectAnswer(e) {
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
+
+  if (correct) {
+    score++;
+  }
+
   setStatusClass(document.body, correct)
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
@@ -57,8 +64,10 @@ function selectAnswer(e) {
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
-    startButton.innerText = 'Restart'
-    startButton.classList.remove('hide')
+    // Move the score and "Restart" button display outside the else block
+    questionElement.innerText = `Congratulations! You got ${score} out of ${questions.length} correct!`;
+    startButton.innerText = 'Restart';
+    startButton.classList.remove('hide');
   }
 }
 
